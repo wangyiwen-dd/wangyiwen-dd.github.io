@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>起落数据统计</title>a
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #1a3a5c;
+            font-size: 24px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e8eef3;
+        }
+        .stats-overview {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            flex: 1;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        .stat-card .label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a3a5c;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 14px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .form-group label {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+            min-width: 80px;
+        }
+        .form-group input[type="date"],
+        .form-group input[type="number"] {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #d0d7de;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #fafbfc;
+            min-width: 150px;
+        }
+        .form-group input:focus {
+            border-color: #2c5364;
+            background: #fff;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background: #1a3a5c;
+            color: #fff;
+            flex: 1;
+        }
+        .btn-primary:hover {
+            background: #2c5364;
+        }
+        .btn-secondary {
+            background: #e8eef3;
+            color: #1a3a5c;
+        }
+        .btn-secondary:hover {
+            background: #d0d7de;
+        }
+        .btn-danger {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        .btn-danger:hover {
+            background: #fecaca;
+        }
+        .data-section {
+            margin-top: 28px;
+        }
+        .data-section h2 {
+            font-size: 16px;
+            color: #1a3a5c;
+            margin-bottom: 12px;
+            padding-left: 10px;
+            border-left: 3px solid #2c5364;
+        }
+        .record-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        .record-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 14px;
+        }
+        .record-item:last-child {
+            border-bottom: none;
+        }
+        .record-item .date {
+            color: #333;
+        }
+        .record-item .count {
+            color: #1a3a5c;
+            font-weight: 600;
+        }
+        .record-item .del-btn {
+            background: none;
+            border: none;
+            color: #dc2626;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0 4px;
+        }
+        .record-item .del-btn:hover {
+            color: #991b1b;
+        }
+        .empty-tip {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+            font-size: 14px;
+        }
+        .sync-section {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid #e8eef3;
+        }
+        .sync-section h2 {
+            font-size: 16px;
+            color: #1a3a5c;
+            margin-bottom: 12px;
+            padding-left: 10px;
+            border-left: 3px solid #2c5364;
+        }
+        .sync-tip {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        .sync-btns {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .hidden-input {
+            display: none;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 20px 16px; }
+            .stats-overview { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✈️ 起落数据统计</h1>
+
+        <div class="stats-overview">
+            <div class="stat-card">
+                <div class="label">起落总数</div>
+                <div class="value" id="totalCount">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">近一个月起落</div>
+                <div class="value" id="monthCount">0</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>日期</label>
+            <input type="date" id="recordDate">
+        </div>
+        <div class="form-group">
+            <label>起落次数</label>
+            <input type="number" id="recordCount" placeholder="请输入起落次数" min="0">
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="addRecord()">添加记录</button>
+        </div>
+
+        <div class="data-section">
+            <h2>📋 记录列表</h2>
+            <div class="record-list" id="recordList">
+                <div class="empty-tip">暂无记录</div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="clearAll()">清空所有记录</button>
+            </div>
+        </div>
+
+        <div class="sync-section">
+            <h2>🔄 数据同步</h2>
+            <p class="sync-tip">数据默认保存在当前浏览器中。更换设备或浏览器时，可先导出数据文件，在新设备上导入即可恢复全部记录。</p>
+            <div class="sync-btns">
+                <button class="btn btn-secondary" onclick="exportData()">📤 导出数据</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📥 导入数据</button>
+                <input type="file" id="importFile" class="hidden-input" accept=".json" onchange="importData(event)">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'qiluo_records';
+
+        function getRecords() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            return data ? JSON.parse(data) : [];
+        }
+
+        function saveRecords(records) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+        }
+
+        function getMonthAgo() {
+            const now = new Date();
+            return new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+        }
+
+        function updateStats() {
+            const records = getRecords();
+            const total = records.reduce((sum, r) => sum + r.count, 0);
+            document.getElementById('totalCount').textContent = total;
+
+            const monthAgo = getMonthAgo();
+            const monthTotal = records
+                .filter(r => new Date(r.date) >= monthAgo)
+                .reduce((sum, r) => sum + r.count, 0);
+            document.getElementById('monthCount').textContent = monthTotal;
+        }
+
+        function renderList() {
+            const records = getRecords();
+            const list = document.getElementById('recordList');
+            if (records.length === 0) {
+                list.innerHTML = '<div class="empty-tip">暂无记录</div>';
+                return;
+            }
+            const sorted = [...records].sort((a, b) => new Date(b.date) - new Date(a.date));
+            list.innerHTML = sorted.map((r, i) => `
+                <div class="record-item">
+                    <span class="date">${r.date}</span>
+                    <span class="count">${r.count} 次</span>
+                    <button class="del-btn" onclick="deleteRecord('${r.date}')">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function addRecord() {
+            const date = document.getElementById('recordDate').value;
+            const count = parseInt(document.getElementById('recordCount').value);
+
+            if (!date) {
+                alert('请选择日期');
+                return;
+            }
+            if (isNaN(count) || count < 0) {
+                alert('请输入有效的起落次数');
+                return;
+            }
+
+            const records = getRecords();
+            const existing = records.find(r => r.date === date);
+            if (existing) {
+                existing.count += count;
+            } else {
+                records.push({ date, count });
+            }
+            saveRecords(records);
+            document.getElementById('recordCount').value = '';
+            updateStats();
+            renderList();
+        }
+
+        function deleteRecord(date) {
+            let records = getRecords();
+            records = records.filter(r => r.date !== date);
+            saveRecords(records);
+            updateStats();
+            renderList();
+        }
+
+        function clearAll() {
+            if (!confirm('确定要清空所有记录吗？此操作不可恢复！')) return;
+            saveRecords([]);
+            updateStats();
+            renderList();
+        }
+
+        function exportData() {
+            const records = getRecords();
+            if (records.length === 0) {
+                alert('暂无数据可导出');
+                return;
+            }
+            const blob = new Blob([JSON.stringify(records, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `起落数据统计_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(event) {
+            const file = event.target.files;
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (!Array.isArray(data)) throw new Error('格式错误');
+                    const valid = data.every(r => r.date && typeof r.count === 'number');
+                    if (!valid) throw new Error('格式错误');
+
+                    if (!confirm(`将导入 ${data.length} 条记录，是否覆盖当前数据？`)) {
+                        event.target.value = '';
+                        return;
+                    }
+                    saveRecords(data);
+                    updateStats();
+                    renderList();
+                    alert('导入成功！');
+                } catch (err) {
+                    alert('导入失败：文件格式不正确');
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        }
+
+        // 初始化
+        updateStats();
+        renderList();
+    </script>
+</body>
+</html>
