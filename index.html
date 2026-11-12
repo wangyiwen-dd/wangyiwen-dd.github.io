@@ -493,12 +493,12 @@
     <div class="main-warn-text">⚠️ 注意：起落记录只保存在浏览器本地，使用该工具时请关闭无痕模式，若在其他设备上使用该工具，可使用<span class="nowrap-bracket">【起落数据统计】</span>页面下方数据同步功能。</div>
 
     <div class="tabs">
-        <button class="tab-item" data-tab="tab-qiluo">起落数据统计</button>
-        <button class="tab-item active" data-tab="tab-sms">飞行前短信生成</button>
+        <button class="tab-item active" data-tab="tab-qiluo">起落数据统计</button>
+        <button class="tab-item" data-tab="tab-sms">飞行前短信生成</button>
     </div>
 
-    <!-- 起落数据统计 -->
-    <div class="tab-panel" id="tab-qiluo">
+    <!-- 起落数据统计 默认激活 -->
+    <div class="tab-panel active" id="tab-qiluo">
         <div class="tab-desc">该工具可以统计<span class="nowrap-bracket">【起落总数】</span>及<span class="nowrap-bracket">【近一个月起落总数】</span>，并自动同步到<span class="nowrap-bracket">【飞行前短信生成】</span>工具中。只需将一个月前的起落总数合并添加，并依次添加一个月之内的起落，则可自动统计<span class="nowrap-bracket">【起落总数】</span>和<span class="nowrap-bracket">【近一个月起落】</span>。</div>
 
         <div class="stats-overview">
@@ -555,7 +555,7 @@
     </div>
 
     <!-- 飞行前短信生成 -->
-    <div class="tab-panel active" id="tab-sms">
+    <div class="tab-panel" id="tab-sms">
         <div class="tab-desc">该工具用于生成飞行前汇报短信，生成后的内容可一键复制。其中带*号内容为必填项目，<span class="nowrap-bracket">【总把杆次数】</span>和<span class="nowrap-bracket">【近一个月把杆次数】</span>自动从<span class="nowrap-bracket">【起落数据统计】</span>中获取，也可人工修改。其余内容不填则不显示在短信中。</div>
         <div class="tab-cache-tip">注：输入的<span class="nowrap-bracket">【所属单位】</span><span class="nowrap-bracket">【技术等级】</span><span class="nowrap-bracket">【姓名】</span><span class="nowrap-bracket">【飞行经历小时】</span><span class="nowrap-bracket">【近期讲评主要问题】</span>及<span class="nowrap-bracket">【半年内三级事件】</span>内容会保存在本地缓存中，工具打开时会保留上次填写的以上内容。</div>
 
@@ -657,6 +657,7 @@
                 </div>
             </div>
 
+            <!-- 机型在前 -->
             <div class="form-group">
                 <label><span class="star">*</span>机型</label>
                 <div class="input-wrap">
@@ -675,6 +676,7 @@
                     </select>
                 </div>
             </div>
+            <!-- 机号在后 -->
             <div class="form-group">
                 <label><span class="star">*</span>机号</label>
                 <div class="input-wrap">
@@ -743,21 +745,6 @@
 const STORAGE_KEY = 'qiluo_records';
 const SMS_SAVE_KEY = 'sms_persist_data';
 
-// ========== 【机号-机型映射表】在这里自行添加、修改 ==========
-const planeMap = {
-    "30CA":"A320-271N",
-};
-// =========================================================
-
-function autoMatchTypeByNo(){
-    const noVal = document.getElementById('aircraftNo').value.trim();
-    if(!noVal) return;
-    const targetType = planeMap[noVal];
-    if(targetType){
-        document.getElementById('aircraftType').value = targetType;
-    }
-}
-
 function getSmsPersist(){
     const raw = localStorage.getItem(SMS_SAVE_KEY);
     return raw ? JSON.parse(raw) : { userName:"", unit:"", hours:"", review:"", level:"", event:"", askDress:"yes" };
@@ -807,7 +794,7 @@ tabBtns.forEach(btn=>{
         document.getElementById(tabId).classList.add('active');
 
         if(tabId === 'tab-sms'){
-            fillControlData();
+            fillControlData(); // 切换到短信页，立刻刷新起落数据
             fillSmsPersist();
         }
     })
@@ -820,8 +807,6 @@ document.getElementById('review').addEventListener('blur', saveSmsPersist);
 document.getElementById('level').addEventListener('change', saveSmsPersist);
 document.getElementById('event').addEventListener('blur', saveSmsPersist);
 document.getElementById('askDress').addEventListener('change', saveSmsPersist);
-// 机号失去焦点自动匹配机型
-document.getElementById('aircraftNo').addEventListener('blur', autoMatchTypeByNo);
 
 function getRecords() {
     const data = localStorage.getItem(STORAGE_KEY);
