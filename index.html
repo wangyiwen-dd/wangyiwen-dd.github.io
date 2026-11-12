@@ -240,7 +240,7 @@
         .hidden-input {
             display: none;
         }
-        /* === 飞行短信生成样式 === */
+        /* === 飞行短信生成样式 修复flex小屏收缩问题 === */
         .form-group label.fs-label {
             width: 130px;
             font-size: 14px;
@@ -255,12 +255,13 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            min-width: 0;
-            flex-wrap:wrap;
+            min-width: 0; /* 关键：允许flex子项收缩，解决select文字被截断 */
+            flex-wrap:nowrap;
         }
+        /* select、input：允许内部横向滚动查看完整输入内容 */
         .form-group select,
         .form-group input[type="text"] {
-            width: 100%;
+            flex:1;
             padding: 10px 12px;
             border: 1px solid #d0d7de;
             border-radius: 8px;
@@ -269,16 +270,20 @@
             transition: border-color 0.2s;
             background: #fafbfc;
             min-height:44px;
+            min-width:0; /* flex收缩关键，手机不会撑爆/换行 */
+            overflow-x:auto;
         }
         .suffix {
             font-size: 13px;
             color: #666;
             white-space: nowrap;
+            flex-shrink:0;
         }
         .prefix {
             font-size: 13px;
             color: #666;
             white-space: nowrap;
+            flex-shrink:0;
         }
         .result-area {
             margin-top: 24px;
@@ -320,14 +325,17 @@
         .inline-group select,
         .inline-group input {
             flex: 1;
+            min-width:0;
         }
         #title {
             flex: 0 0 80px;
             width: 80px;
+            min-width:0;
         }
         .custom-input {
             display: none;
             flex: 1;
+            min-width:0;
         }
         .btn-copy {
             background: #e8eef3;
@@ -343,8 +351,16 @@
             h1{font-size:20px;}
             .stats-overview { flex-direction: column; }
             .form-group{align-items:flex-start;}
-            .form-group label.fs-label { width: 100%; font-size: 13px; padding-top:0; margin-bottom:4px;}
-            .input-wrap { min-width: 100%; }
+            /*手机小屏：标签独占一行，下面放输入控件行，解决机号跑到下一行问题 */
+            .form-group label.fs-label {
+                width: 100%;
+                font-size: 13px;
+                padding-top:0;
+                margin-bottom:4px;
+            }
+            .input-wrap {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
@@ -477,7 +493,7 @@
         <div class="form-group">
             <label class="fs-label">机型/机号</label>
             <div class="input-wrap">
-                <select id="aircraftType" style="flex: 0 0 100px;">
+                <select id="aircraftType" style="flex: 0 0 100px; min-width:0;">
                     <option value="A319">A319</option>
                     <option value="A320">A320</option>
                     <option value="A321">A321</option>
