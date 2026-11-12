@@ -425,7 +425,7 @@
             <p class="sync-tip">数据默认保存在当前浏览器中。更换设备或浏览器时，可先导出数据文件，在新设备上导入即可恢复全部记录。</p>
             <div class="sync-btns">
                 <button class="btn btn-secondary" onclick="exportData()">📤 导出数据</button>
-                <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📥 导入数据</button>
+                <button class="btn btn-secondary" onclick="openImport()">📥 导入数据</button>
                 <input type="file" id="importFile" class="hidden-input" accept=".json" onchange="importData(event)">
             </div>
         </div>
@@ -699,10 +699,25 @@ function exportData() {
     a.click();
     URL.revokeObjectURL(url);
 }
+
+//修复导入：点击先清空input，再唤起选择文件
+function openImport(){
+    const fileInput = document.getElementById('importFile');
+    fileInput.value = '';
+    fileInput.click();
+}
+
 function importData(event) {
-    const file = event.target.files;
-    if (!file) return;
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    const file = files[0];
     const reader = new FileReader();
+
+    reader.onerror = function(){
+        alert('读取文件失败，请检查文件');
+        event.target.value = '';
+    };
+
     reader.onload = function(e) {
         try {
             const data = JSON.parse(e.target.result);
@@ -724,6 +739,7 @@ function importData(event) {
     };
     reader.readAsText(file);
 }
+
 // ==========飞行短信生成逻辑==========
 function toggleCustomTitle() {
     const select = document.getElementById('title');
