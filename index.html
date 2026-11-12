@@ -97,8 +97,11 @@
             min-width: 80px;
             padding-top:8px;
         }
+        /* 统一所有输入框样式，包含date/time/number/text */
         .form-group input[type="date"],
-        .form-group input[type="number"] {
+        .form-group input[type="time"],
+        .form-group input[type="number"],
+        .form-group input[type="text"] {
             flex: 1;
             padding: 10px 12px;
             border: 1px solid #d0d7de;
@@ -258,8 +261,7 @@
             min-width: 0;
             flex-wrap:nowrap;
         }
-        .form-group select,
-        .form-group input[type="text"] {
+        .form-group select {
             padding: 10px 12px;
             border: 1px solid #d0d7de;
             border-radius: 8px;
