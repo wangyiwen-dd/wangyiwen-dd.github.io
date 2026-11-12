@@ -34,7 +34,6 @@
             overflow-x: hidden;
         }
 
-        /* 新增：所有带【】的标签统一防换行 */
         .nowrap-bracket {
             white-space: nowrap;
         }
@@ -74,7 +73,6 @@
             border-bottom: 1px solid var(--blue-line);
         }
 
-        /* 选项卡 */
         .tabs {
             display: flex;
             gap: 8px;
@@ -133,7 +131,6 @@
             border-radius: var(--radius-sm);
         }
 
-        /* 统计卡片 */
         .stats-overview {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -163,7 +160,6 @@
             letter-spacing: 1px;
         }
 
-        /* 表单通用 */
         .section-title {
             font-size: 15px;
             font-weight: 700;
@@ -261,7 +257,6 @@
             flex: 0 0 110px;
             width: 110px;
         }
-        /* 机型下拉单独适配，足够宽，完整显示长机型编号 */
         #aircraftType {
             flex: 1 1 auto;
             min-width: 160px;
@@ -271,7 +266,6 @@
             display: none;
         }
 
-        /* 按钮组 */
         .btn-group {
             display: flex;
             gap: 12px;
@@ -324,7 +318,6 @@
             background: #fadfdf;
         }
 
-        /* 数据区 */
         .data-section {
             margin-top: 26px;
         }
@@ -438,7 +431,6 @@
             cursor: pointer;
         }
 
-        /* 结果区 */
         .result-area {
             margin-top: 24px;
             background: linear-gradient(160deg, #fafcfe, #eef5fa);
@@ -461,7 +453,6 @@
             font-family: inherit;
         }
 
-        /* 移动端 */
         @media (max-width: 600px) {
             body {
                 padding: 12px;
@@ -489,7 +480,6 @@
                 flex: 0 0 100px;
                 width: 100px;
             }
-            /* 手机端机型下拉最小宽度保证 */
             #aircraftType {
                 min-width: 140px;
             }
@@ -667,7 +657,6 @@
                 </div>
             </div>
 
-            <!-- 机型单独一行 -->
             <div class="form-group">
                 <label><span class="star">*</span>机型</label>
                 <div class="input-wrap">
@@ -686,12 +675,11 @@
                     </select>
                 </div>
             </div>
-            <!-- 机号单独一行 -->
             <div class="form-group">
-                <label><span class="star">*</span>机号</label>
+                <label><span class="star">*</span>机号（输入后自动匹配机型）</label>
                 <div class="input-wrap">
                     <span class="prefix">B‑</span>
-                    <input type="text" id="aircraftNo" placeholder="请输入机号">
+                    <input type="text" id="aircraftNo" placeholder="请输入机号，如3051">
                 </div>
             </div>
         </div>
@@ -755,6 +743,24 @@
 const STORAGE_KEY = 'qiluo_records';
 const SMS_SAVE_KEY = 'sms_persist_data';
 
+// ========== 【机号-机型映射表】在这里自行添加、修改 ==========
+const planeMap = {
+    "3051":"A320-271N",
+    "3052":"A320-271N",
+    "5940":"A321-271NX",
+    "6080":"A330-343"
+};
+// =========================================================
+
+function autoMatchTypeByNo(){
+    const noVal = document.getElementById('aircraftNo').value.trim();
+    if(!noVal) return;
+    const targetType = planeMap[noVal];
+    if(targetType){
+        document.getElementById('aircraftType').value = targetType;
+    }
+}
+
 function getSmsPersist(){
     const raw = localStorage.getItem(SMS_SAVE_KEY);
     return raw ? JSON.parse(raw) : { userName:"", unit:"", hours:"", review:"", level:"", event:"", askDress:"yes" };
@@ -817,6 +823,8 @@ document.getElementById('review').addEventListener('blur', saveSmsPersist);
 document.getElementById('level').addEventListener('change', saveSmsPersist);
 document.getElementById('event').addEventListener('blur', saveSmsPersist);
 document.getElementById('askDress').addEventListener('change', saveSmsPersist);
+// 机号失去焦点自动匹配机型
+document.getElementById('aircraftNo').addEventListener('blur', autoMatchTypeByNo);
 
 function getRecords() {
     const data = localStorage.getItem(STORAGE_KEY);
