@@ -231,6 +231,29 @@
             transition: all 0.2s ease;
             min-height: 48px;
         }
+        /* 自动高度文本框样式 */
+        .form-group textarea.auto-height {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--blue-line);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            color: var(--text-main);
+            background: #fff;
+            outline: none;
+            transition: all 0.2s ease;
+            min-height: 48px;
+            max-height: 160px;
+            resize: none;
+            line-height: 1.5;
+        }
+        .form-group textarea.auto-height:focus {
+            border-color: var(--blue-main);
+            box-shadow: 0 0 0 3px rgba(37, 80, 115, 0.12);
+        }
+        .form-group textarea.auto-height::placeholder {
+            color: var(--text-placeholder);
+        }
 
         .form-group input:focus,
         .form-group select:focus {
@@ -690,30 +713,22 @@
         <div class="form-card">
             <div class="form-group">
                 <label>航行通告</label>
-                <div class="input-wrap">
-                    <input type="text" id="notam" placeholder="请输入航行通告内容">
-                </div>
+                <textarea class="auto-height" id="notam" placeholder="请输入航行通告内容"></textarea>
             </div>
 
             <div class="form-group">
                 <label>风险提示单主要内容</label>
-                <div class="input-wrap">
-                    <input type="text" id="risk" placeholder="请输入风险提示内容">
-                </div>
+                <textarea class="auto-height" id="risk" placeholder="请输入风险提示内容"></textarea>
             </div>
 
             <div class="form-group">
                 <label>近期讲评的主要问题</label>
-                <div class="input-wrap">
-                    <input type="text" id="review" placeholder="请输入讲评问题">
-                </div>
+                <textarea class="auto-height" id="review" placeholder="请输入讲评问题"></textarea>
             </div>
 
             <div class="form-group">
                 <label>半年内三级事件</label>
-                <div class="input-wrap">
-                    <input type="text" id="event" placeholder="请输入半年内三级事件">
-                </div>
+                <textarea class="auto-height" id="event" placeholder="请输入半年内三级事件"></textarea>
             </div>
         </div>
 
@@ -745,9 +760,22 @@
 const STORAGE_KEY = 'qiluo_records';
 const SMS_SAVE_KEY = 'sms_persist_data';
 
+// 自动高度函数
+function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+}
+
+function bindAutoResize() {
+    document.querySelectorAll('textarea.auto-height').forEach(ta=>{
+        autoResize(ta);
+        ta.addEventListener('input', ()=>autoResize(ta));
+    })
+}
+
 function getSmsPersist(){
     const raw = localStorage.getItem(SMS_SAVE_KEY);
-    return raw ? JSON.parse(raw) : { userName:"", unit:"", hours:"", review:"", level:"", event:"", askDress:"yes" };
+    return raw ? JSON.parse(raw) : { userName:"", unit:"", hours:"", review:"", level:"", event:"", askDress:"yes", notam:"", risk:"" };
 }
 
 function saveSmsPersist(){
@@ -758,7 +786,9 @@ function saveSmsPersist(){
         review: document.getElementById('review').value,
         level: document.getElementById('level').value,
         event: document.getElementById('event').value,
-        askDress: document.getElementById('askDress').value
+        askDress: document.getElementById('askDress').value,
+        notam: document.getElementById('notam').value,
+        risk: document.getElementById('risk').value
     };
     localStorage.setItem(SMS_SAVE_KEY, JSON.stringify(obj));
 }
@@ -768,10 +798,14 @@ function fillSmsPersist(){
     document.getElementById('userName').value = d.userName;
     document.getElementById('unit').value = d.unit;
     document.getElementById('hours').value = d.hours;
-    document.getElementById('review').value = d.review;
+    document.getElementById('review').value = d.review || '';
     if(d.level) document.getElementById('level').value = d.level;
-    if(d.event !== undefined) document.getElementById('event').value = d.event;
+    if(d.event !== undefined) document.getElementById('event').value = d.event || '';
     if(d.askDress) document.getElementById('askDress').value = d.askDress;
+    document.getElementById('notam').value = d.notam || '';
+    document.getElementById('risk').value = d.risk || '';
+    // 回填后重新计算高度
+    bindAutoResize();
 }
 
 function fillControlData(){
@@ -794,19 +828,22 @@ tabBtns.forEach(btn=>{
         document.getElementById(tabId).classList.add('active');
 
         if(tabId === 'tab-sms'){
-            fillControlData(); // 切换到短信页，立刻刷新起落数据
+            fillControlData();
             fillSmsPersist();
         }
     })
 })
 
+// 监听保存
 document.getElementById('userName').addEventListener('blur', saveSmsPersist);
 document.getElementById('unit').addEventListener('blur', saveSmsPersist);
 document.getElementById('hours').addEventListener('blur', saveSmsPersist);
-document.getElementById('review').addEventListener('blur', saveSmsPersist);
+document.getElementById('review').addEventListener('input', saveSmsPersist);
 document.getElementById('level').addEventListener('change', saveSmsPersist);
-document.getElementById('event').addEventListener('blur', saveSmsPersist);
+document.getElementById('event').addEventListener('input', saveSmsPersist);
 document.getElementById('askDress').addEventListener('change', saveSmsPersist);
+document.getElementById('notam').addEventListener('input', saveSmsPersist);
+document.getElementById('risk').addEventListener('input', saveSmsPersist);
 
 function getRecords() {
     const data = localStorage.getItem(STORAGE_KEY);
@@ -1045,6 +1082,7 @@ async function copyText() {
 
 updateStats();
 renderList();
+bindAutoResize();
 </script>
 </body>
 </html>
