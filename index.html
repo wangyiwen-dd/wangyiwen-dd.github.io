@@ -437,7 +437,7 @@
         </div>
         <div class="sync-section">
             <h2>🔄 数据同步</h2>
-            <p class="sync-tip">数据默认保存在当前浏览器中。更换设备或浏览器时，可先导出数据文件，在新设备上导入即可恢复全部记录。</p>
+            <p class="sync-tip">导出仅包含起落记录；类别、小时、讲评等配置保存在浏览器本地，不会随JSON导出。</p>
             <div class="sync-btns">
                 <button class="btn btn-secondary" onclick="exportData()">📤 导出数据</button>
                 <div class="file-wrap">
@@ -563,7 +563,7 @@
         </div>
         <div class="btn-group" style="justify-content:center">
             <button class="btn btn-primary" onclick="generate()">生成短信</button>
-            <button class="btn btn-copy" onclick="copyText()" id="copyBtn" style="display:none;">复制内容</button>
+            <button class="btn btn-copy" onclick="copyText()" id="copyBtn" style="display:none;">一键复制内容</button>
         </div>
         <div class="result-area" id="resultArea">
             <textarea id="resultText" readonly></textarea>
@@ -578,13 +578,14 @@ const SMS_SAVE_KEY = 'sms_persist_data';
 // 读取短信持久化数据
 function getSmsPersist(){
     const raw = localStorage.getItem(SMS_SAVE_KEY);
-    return raw ? JSON.parse(raw) : { hours:"", review:"" };
+    return raw ? JSON.parse(raw) : { hours:"", review:"", level:"" };
 }
 // 保存短信持久化数据
 function saveSmsPersist(){
     const obj = {
         hours: document.getElementById('hours').value,
-        review: document.getElementById('review').value
+        review: document.getElementById('review').value,
+        level: document.getElementById('level').value
     };
     localStorage.setItem(SMS_SAVE_KEY, JSON.stringify(obj));
 }
@@ -593,6 +594,7 @@ function fillSmsPersist(){
     const d = getSmsPersist();
     document.getElementById('hours').value = d.hours;
     document.getElementById('review').value = d.review;
+    if(d.level) document.getElementById('level').value = d.level;
 }
 
 // 自动填充把杆次数函数：读取起落统计localStorage数据填入短信表单
@@ -616,7 +618,7 @@ tabBtns.forEach(btn=>{
         document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById(tabId).classList.add('active');
-        //切换到短信tab：填充把杆 + 回填小时、讲评
+        //切换到短信tab：填充把杆 + 回填小时、讲评、类别
         if(tabId === 'tab-sms'){
             fillControlData();
             fillSmsPersist();
@@ -624,9 +626,10 @@ tabBtns.forEach(btn=>{
     })
 })
 
-// 失去焦点自动保存持久化字段
+// 失去焦点/切换类别自动保存持久化字段
 document.getElementById('hours').addEventListener('blur', saveSmsPersist);
 document.getElementById('review').addEventListener('blur', saveSmsPersist);
+document.getElementById('level').addEventListener('change', saveSmsPersist);
 
 // ========== 起落数据统计逻辑 ==========
 function getRecords() {
@@ -704,10 +707,7 @@ function clearAll() {
 }
 function exportData() {
     const records = getRecords();
-    if (records.length === 0) {
-        alert('暂无数据可导出');
-        return;
-    }
+    // 直接导出纯起落记录数组，不再附带config
     const blob = new Blob([JSON.stringify(records, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -717,7 +717,7 @@ function exportData() {
     URL.revokeObjectURL(url);
 }
 
-//导入逻辑，label原生触发，不再使用js click调用
+//导入逻辑
 function importData(event) {
     const files = event.target.files;
     if (!files || files.length === 0) return;
@@ -731,18 +731,24 @@ function importData(event) {
 
     reader.onload = function(e) {
         try {
-            const data = JSON.parse(e.target.result);
-            if (!Array.isArray(data)) throw new Error('格式错误');
+            let data = JSON.parse(e.target.result);
+            //兼容旧格式：如果是带records的对象，提取records数组
+            if(data && Array.isArray(data.records)){
+                data = data.records;
+            }
+            if(!Array.isArray(data)){
+                throw new Error('不是起落记录数组');
+            }
             const valid = data.every(r => r.date && typeof r.count === 'number');
             if (!valid) throw new Error('格式错误');
-            if (!confirm(`将导入 ${data.length} 条记录，是否覆盖当前数据？`)) {
+            if (!confirm(`将导入 ${data.length} 条起落记录，是否覆盖当前记录？`)) {
                 event.target.value = '';
                 return;
             }
             saveRecords(data);
             updateStats();
             renderList();
-            alert('导入成功！');
+            alert('导入成功！起落记录已恢复');
         } catch (err) {
             alert('导入失败：文件格式不正确');
         }
@@ -798,16 +804,23 @@ ${notamText}${riskText}${reviewText}半年内三级事件：${eventText}
 麻烦再问一下，您看明天我们着装是什么要求？`;
     document.getElementById('resultText').value = text;
     document.getElementById('resultArea').style.display = 'block';
-    document.getElementById('copyBtn').style.display = 'inline‑block';
+    document.getElementById('copyBtn').style.display = 'inline-block';
 }
-function copyText() {
-    const text = document.getElementById('resultText');
-    text.select();
-    text.setSelectionRange(0, 99999);
-    document.execCommand('copy');
+// 新版复制：使用现代Clipboard API，兼容手机浏览器
+async function copyText() {
+    const text = document.getElementById('resultText').value;
     const btn = document.getElementById('copyBtn');
-    btn.textContent = '已复制 ✓';
-    setTimeout(() => { btn.textContent = '复制内容'; }, 2000);
+    try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = '✅ 已复制';
+    } catch (err) {
+        //降级兼容老浏览器
+        document.getElementById('resultText').select();
+        document.getElementById('resultText').setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        btn.textContent = '✅ 已复制';
+    }
+    setTimeout(() => { btn.textContent = '一键复制内容'; }, 2000);
 }
 //页面初始化
 updateStats();
