@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>飞行工具合集</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -10,20 +10,21 @@
             font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
             background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             min-height: 100vh;
-            padding: 20px;
+            padding: 16px;
+            overflow-x: hidden;
         }
         .container {
             max-width: 720px;
             margin: 0 auto;
             background: #fff;
             border-radius: 16px;
-            padding: 30px;
+            padding: 24px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
         h1 {
             text-align: center;
             color: #1a3a5c;
-            font-size: 24px;
+            font-size: 22px;
             margin-bottom: 20px;
             padding-bottom: 16px;
             border-bottom: 2px solid #e8eef3;
@@ -34,15 +35,19 @@
             gap:8px;
             margin-bottom:24px;
             border-bottom:1px solid #e2e8f0;
+            flex-wrap: wrap;
         }
         .tab-item {
-            padding:10px 18px;
+            padding:12px 14px;
             cursor:pointer;
             border:none;
             background:#f1f5f9;
             border-radius:8px 8px 0 0;
             font-size:14px;
             color:#475569;
+            min-height:44px;
+            flex:1;
+            min-width:120px;
         }
         .tab-item.active {
             background:#1a3a5c;
@@ -80,7 +85,7 @@
         }
         .form-group {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 14px;
             gap: 10px;
             flex-wrap: wrap;
@@ -90,18 +95,20 @@
             color: #333;
             font-weight: 500;
             min-width: 80px;
+            padding-top:8px;
         }
         .form-group input[type="date"],
         .form-group input[type="number"] {
             flex: 1;
-            padding: 8px 12px;
+            padding: 10px 12px;
             border: 1px solid #d0d7de;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 16px;
             outline: none;
             transition: border-color 0.2s;
             background: #fafbfc;
             min-width: 150px;
+            min-height:44px;
         }
         .form-group input:focus {
             border-color: #2c5364;
@@ -114,13 +121,14 @@
             flex-wrap: wrap;
         }
         .btn {
-            padding: 10px 24px;
+            padding: 12px 16px;
             border: none;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 15px;
             cursor: pointer;
             transition: all 0.2s;
             font-weight: 500;
+            min-height:44px;
         }
         .btn-primary {
             background: #1a3a5c;
@@ -164,9 +172,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 14px;
+            padding: 12px 14px;
             border-bottom: 1px solid #f0f2f5;
             font-size: 14px;
+            min-height:48px;
+            gap:12px;
         }
         .record-item:last-child {
             border-bottom: none;
@@ -177,17 +187,26 @@
         .record-item .count {
             color: #1a3a5c;
             font-weight: 600;
+            margin-right:auto;
         }
+        /* 美化删除按钮 */
         .record-item .del-btn {
-            background: none;
+            background-color: #ef4444;
+            color:#ffffff;
             border: none;
-            color: #dc2626;
             cursor: pointer;
-            font-size: 16px;
-            padding: 0 4px;
+            font-size:13px;
+            padding:6px 12px;
+            border-radius:6px;
+            min-height:34px;
+            transition: background 0.2s;
+            flex-shrink:0;
         }
         .record-item .del-btn:hover {
-            color: #991b1b;
+            background-color:#dc2626;
+        }
+        .record-item .del-btn:active{
+            background-color:#b91c1c;
         }
         .empty-tip {
             text-align: center;
@@ -221,7 +240,6 @@
         .hidden-input {
             display: none;
         }
-
         /* === 飞行短信生成样式 === */
         .form-group label.fs-label {
             width: 130px;
@@ -230,24 +248,27 @@
             font-weight: 500;
             flex-shrink: 0;
             min-width:auto;
+            padding-top:8px;
         }
         .input-wrap {
             flex: 1;
             display: flex;
             align-items: center;
             gap: 6px;
-            min-width: 200px;
+            min-width: 0;
+            flex-wrap:wrap;
         }
         .form-group select,
         .form-group input[type="text"] {
             width: 100%;
-            padding: 8px 12px;
+            padding: 10px 12px;
             border: 1px solid #d0d7de;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 16px;
             outline: none;
             transition: border-color 0.2s;
             background: #fafbfc;
+            min-height:44px;
         }
         .suffix {
             font-size: 13px;
@@ -272,7 +293,7 @@
             min-height: 320px;
             border: none;
             background: transparent;
-            font-size: 14px;
+            font-size: 15px;
             line-height: 1.8;
             resize: vertical;
             outline: none;
@@ -294,7 +315,7 @@
             display: flex;
             gap: 10px;
             flex: 1;
-            min-width: 200px;
+            min-width: 0;
         }
         .inline-group select,
         .inline-group input {
@@ -317,10 +338,13 @@
         }
 
         @media (max-width: 600px) {
-            .container { padding: 20px 16px; }
+            body{padding:12px;}
+            .container { padding: 18px 14px; }
+            h1{font-size:20px;}
             .stats-overview { flex-direction: column; }
-            .form-group label.fs-label { width: 110px; font-size: 13px; }
-            .input-wrap { min-width: 160px; }
+            .form-group{align-items:flex-start;}
+            .form-group label.fs-label { width: 100%; font-size: 13px; padding-top:0; margin-bottom:4px;}
+            .input-wrap { min-width: 100%; }
         }
     </style>
 </head>
@@ -332,7 +356,6 @@
         <button class="tab-item active" data-tab="tab-qiluo">起落数据统计</button>
         <button class="tab-item" data-tab="tab-sms">飞行前短信生成</button>
     </div>
-
     <!-- tab1 起落数据统计 -->
     <div class="tab-panel active" id="tab-qiluo">
         <div class="stats-overview">
@@ -375,7 +398,6 @@
             </div>
         </div>
     </div>
-
     <!-- tab2 飞行前短信 -->
     <div class="tab-panel" id="tab-sms">
         <div class="section-title">基本信息</div>
@@ -460,8 +482,8 @@
                     <option value="A320">A320</option>
                     <option value="A321">A321</option>
                 </select>
-                <span class="prefix">/B-</span>
-                <input type="text" id="aircraftNo" placeholder="4位数字" maxlength="4" pattern="[0-9]{4}">
+                <span class="prefix">/B‑</span>
+                <input type="text" id="aircraftNo" placeholder="4位数字" maxlength="4" pattern="[0‑9]{4}">
             </div>
         </div>
         <div class="section-title">通告与风险</div>
@@ -499,7 +521,6 @@
         </div>
     </div>
 </div>
-
 <script>
 // ========== tab切换逻辑 ==========
 const tabBtns = document.querySelectorAll('.tab-item');
@@ -513,7 +534,6 @@ tabBtns.forEach(btn=>{
         document.getElementById(tabId).classList.add('active');
     })
 })
-
 // ========== 起落数据统计逻辑 原样保留 ==========
 const STORAGE_KEY = 'qiluo_records';
 function getRecords() {
@@ -549,7 +569,7 @@ function renderList() {
                 <div class="record-item">
                     <span class="date">${r.date}</span>
                     <span class="count">${r.count} 次</span>
-                    <button class="del-btn" onclick="deleteRecord('${r.date}')">✕</button>
+                    <button class="del-btn" onclick="deleteRecord('${r.date}')">删除</button>
                 </div>
             `).join('');
 }
@@ -628,7 +648,6 @@ function importData(event) {
     };
     reader.readAsText(file);
 }
-
 // ==========飞行短信生成逻辑原样保留==========
 function toggleCustomTitle() {
     const select = document.getElementById('title');
@@ -670,13 +689,13 @@ function generate() {
 航班号：3U${flightNo}
 起飞时间：${depTime}
 预计到准备室时间：${readyTime}
-机型/机号：${aircraftType}/B-${aircraftNo}
+机型/机号：${aircraftType}/B‑${aircraftNo}
 ${notamText}${riskText}${reviewText}半年内三级事件：${eventText}
 已完成了网上准备，有很多需要学习的地方，请您多多指教！祝您飞行愉快！谢谢您！
 麻烦再问一下，您看明天我们着装是什么要求？`;
     document.getElementById('resultText').value = text;
     document.getElementById('resultArea').style.display = 'block';
-    document.getElementById('copyBtn').style.display = 'inline-block';
+    document.getElementById('copyBtn').style.display = 'inline‑block';
 }
 function copyText() {
     const text = document.getElementById('resultText');
@@ -687,7 +706,6 @@ function copyText() {
     btn.textContent = '已复制 ✓';
     setTimeout(() => { btn.textContent = '复制内容'; }, 2000);
 }
-
 //初始化
 updateStats();
 renderList();
