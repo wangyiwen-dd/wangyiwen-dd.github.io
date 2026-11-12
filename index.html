@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>飞行前汇报短信模板</title>
+    <title>副驾驶飞行前汇报短信模板</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -34,6 +34,11 @@
             overflow-x: hidden;
         }
 
+        /* 新增：所有带【】的标签统一防换行 */
+        .nowrap-bracket {
+            white-space: nowrap;
+        }
+
         .container {
             max-width: 720px;
             margin: 0 auto;
@@ -57,6 +62,13 @@
             color: var(--text-sub);
             font-size: 13px;
             line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        .main-warn-text {
+            text-align: center;
+            font-size: 13px;
+            color: var(--danger);
+            line-height: 1.7;
             margin-bottom: 22px;
             padding-bottom: 18px;
             border-bottom: 1px solid var(--blue-line);
@@ -110,14 +122,13 @@
             padding: 12px 14px;
             border-radius: var(--radius-sm);
         }
-
-        .warn-text {
+        .tab-cache-tip {
             font-size: 13px;
-            color: var(--danger);
+            color: var(--text-sub);
             line-height: 1.7;
-            margin: 12px 0 20px;
-            background: #fdf2f2;
-            border-left: 4px solid var(--danger);
+            margin: 0 0 20px;
+            background: #f6f9fc;
+            border-left: 4px solid #86a2b8;
             padding: 12px 14px;
             border-radius: var(--radius-sm);
         }
@@ -246,10 +257,14 @@
 
         #title,
         #level,
-        #aircraftType,
         #askDress {
             flex: 0 0 110px;
             width: 110px;
+        }
+        /* 机型下拉单独适配，足够宽，完整显示长机型编号 */
+        #aircraftType {
+            flex: 1 1 auto;
+            min-width: 160px;
         }
 
         #customTitle {
@@ -470,18 +485,22 @@
 
             #title,
             #level,
-            #aircraftType,
             #askDress {
                 flex: 0 0 100px;
                 width: 100px;
+            }
+            /* 手机端机型下拉最小宽度保证 */
+            #aircraftType {
+                min-width: 140px;
             }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>✈️ 飞行前汇报短信模板</h1>
+    <h1>✈️ 副驾驶飞行前汇报短信模板</h1>
     <div class="main-desc">本工具可以辅助生成飞行前短信，数据仅在本地保存，离线可用。</div>
+    <div class="main-warn-text">⚠️ 注意：起落记录只保存在浏览器本地，使用该工具时请关闭无痕模式，若在其他设备上使用该工具，可使用<span class="nowrap-bracket">【起落数据统计】</span>页面下方数据同步功能。</div>
 
     <div class="tabs">
         <button class="tab-item" data-tab="tab-qiluo">起落数据统计</button>
@@ -490,8 +509,7 @@
 
     <!-- 起落数据统计 -->
     <div class="tab-panel" id="tab-qiluo">
-        <div class="tab-desc">该工具可以统计【起落总数】及【近一个月起落总数】，并自动同步到【飞行前短信生成】工具中。只需将一个月前的起落总数合并添加，并依次添加一个月之内的起落，则可自动统计【起落总数】和【近一个月起落】。</div>
-        <div class="warn-text">⚠️ 注意：该记录只保存在浏览器本地，使用该工具时请关闭无痕模式，若在其他设备上使用该工具，可使用下方数据同步功能。</div>
+        <div class="tab-desc">该工具可以统计<span class="nowrap-bracket">【起落总数】</span>及<span class="nowrap-bracket">【近一个月起落总数】</span>，并自动同步到<span class="nowrap-bracket">【飞行前短信生成】</span>工具中。只需将一个月前的起落总数合并添加，并依次添加一个月之内的起落，则可自动统计<span class="nowrap-bracket">【起落总数】</span>和<span class="nowrap-bracket">【近一个月起落】</span>。</div>
 
         <div class="stats-overview">
             <div class="stat-card">
@@ -535,7 +553,7 @@
 
         <div class="sync-section">
             <h2>🔄 数据同步</h2>
-            <p class="sync-tip">导出仅包含起落记录；类别、小时、讲评、所属单位、姓名等配置保存在浏览器本地，不会随JSON导出。</p>
+            <p class="sync-tip">可导出填写的起落记录，在其他设备上导入后即可使用。</p>
             <div class="sync-btns">
                 <button class="btn btn-secondary" onclick="exportData()">📤 导出数据</button>
                 <div class="file-wrap">
@@ -548,7 +566,8 @@
 
     <!-- 飞行前短信生成 -->
     <div class="tab-panel active" id="tab-sms">
-        <div class="tab-desc">该工具用于生成飞行前汇报短信，生成后的内容可一键复制。其中带*号内容为必填项目，【总把杆次数】和【近一个月把杆次数】自动从起落数据统计中获取，也可人工修改。其余内容不填则不显示在短信中。</div>
+        <div class="tab-desc">该工具用于生成飞行前汇报短信，生成后的内容可一键复制。其中带*号内容为必填项目，<span class="nowrap-bracket">【总把杆次数】</span>和<span class="nowrap-bracket">【近一个月把杆次数】</span>自动从<span class="nowrap-bracket">【起落数据统计】</span>中获取，也可人工修改。其余内容不填则不显示在短信中。</div>
+        <div class="tab-cache-tip">注：输入的<span class="nowrap-bracket">【所属单位】</span><span class="nowrap-bracket">【技术等级】</span><span class="nowrap-bracket">【姓名】</span><span class="nowrap-bracket">【飞行经历小时】</span><span class="nowrap-bracket">【近期讲评主要问题】</span>及<span class="nowrap-bracket">【半年内三级事件】</span>内容会保存在本地缓存中，工具打开时会保留上次填写的以上内容。</div>
 
         <div class="section-title">基本信息</div>
         <div class="form-card">
@@ -573,7 +592,7 @@
             </div>
 
             <div class="form-group">
-                <label><span class="star">*</span>类别</label>
+                <label><span class="star">*</span>技术等级</label>
                 <div class="input-wrap">
                     <select id="level">
                         <option value="FL">FL</option>
@@ -648,15 +667,30 @@
                 </div>
             </div>
 
+            <!-- 机型单独一行 -->
             <div class="form-group">
-                <label><span class="star">*</span>机型/机号</label>
+                <label><span class="star">*</span>机型</label>
                 <div class="input-wrap">
                     <select id="aircraftType">
-                        <option value="A319">A319</option>
-                        <option value="A320">A320</option>
-                        <option value="A321">A321</option>
+                        <option value="A319-133">A319-133</option>
+                        <option value="A320-214">A320-214</option>
+                        <option value="A320-232">A320-232</option>
+                        <option value="A320-271N">A320-271N</option>
+                        <option value="A321-211">A321-211</option>
+                        <option value="A321-231">A321-231</option>
+                        <option value="A321-271N">A321-271N</option>
+                        <option value="A321-271NX">A321-271NX</option>
+                        <option value="A330-243">A330-243</option>
+                        <option value="A330-343">A330-343</option>
+                        <option value="A350-941">A350-941</option>
                     </select>
-                    <span class="prefix">/B‑</span>
+                </div>
+            </div>
+            <!-- 机号单独一行 -->
+            <div class="form-group">
+                <label><span class="star">*</span>机号</label>
+                <div class="input-wrap">
+                    <span class="prefix">B‑</span>
                     <input type="text" id="aircraftNo" placeholder="请输入机号">
                 </div>
             </div>
