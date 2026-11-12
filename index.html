@@ -437,7 +437,7 @@
         </div>
         <div class="sync-section">
             <h2>🔄 数据同步</h2>
-            <p class="sync-tip">导出仅包含起落记录；类别、小时、讲评等配置保存在浏览器本地，不会随JSON导出。</p>
+            <p class="sync-tip">导出仅包含起落记录；类别、小时、讲评、所属单位、姓名等配置保存在浏览器本地，不会随JSON导出。</p>
             <div class="sync-btns">
                 <button class="btn btn-secondary" onclick="exportData()">📤 导出数据</button>
                 <div class="file-wrap">
@@ -458,7 +458,13 @@
                     <option value="教员">教员</option>
                     <option value="其他">其他</option>
                 </select>
-                <input type="text" id="customTitle" class="custom-input" placeholder="请输入称呼">
+                <input type="text" id="customTitle" class="custom-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="fs-label">所属单位</label>
+            <div class="input-wrap">
+                <input type="text" id="unit" placeholder="例如：二大队四中队">
             </div>
         </div>
         <div class="form-group">
@@ -474,6 +480,13 @@
                     <option value="FD">FD</option>
                     <option value="FE">FE</option>
                 </select>
+            </div>
+        </div>
+        <!-- 姓名移到类别后面 -->
+        <div class="form-group">
+            <label class="fs-label">姓名</label>
+            <div class="input-wrap">
+                <input type="text" id="userName">
             </div>
         </div>
         <div class="form-group">
@@ -578,11 +591,13 @@ const SMS_SAVE_KEY = 'sms_persist_data';
 // 读取短信持久化数据
 function getSmsPersist(){
     const raw = localStorage.getItem(SMS_SAVE_KEY);
-    return raw ? JSON.parse(raw) : { hours:"", review:"", level:"" };
+    return raw ? JSON.parse(raw) : { userName:"", unit:"", hours:"", review:"", level:"" };
 }
 // 保存短信持久化数据
 function saveSmsPersist(){
     const obj = {
+        userName: document.getElementById('userName').value,
+        unit: document.getElementById('unit').value,
         hours: document.getElementById('hours').value,
         review: document.getElementById('review').value,
         level: document.getElementById('level').value
@@ -592,6 +607,8 @@ function saveSmsPersist(){
 // 回填持久化字段
 function fillSmsPersist(){
     const d = getSmsPersist();
+    document.getElementById('userName').value = d.userName;
+    document.getElementById('unit').value = d.unit;
     document.getElementById('hours').value = d.hours;
     document.getElementById('review').value = d.review;
     if(d.level) document.getElementById('level').value = d.level;
@@ -618,7 +635,7 @@ tabBtns.forEach(btn=>{
         document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById(tabId).classList.add('active');
-        //切换到短信tab：填充把杆 + 回填小时、讲评、类别
+        //切换到短信tab：填充把杆 + 回填姓名、单位、小时、讲评、类别
         if(tabId === 'tab-sms'){
             fillControlData();
             fillSmsPersist();
@@ -626,7 +643,9 @@ tabBtns.forEach(btn=>{
     })
 })
 
-// 失去焦点/切换类别自动保存持久化字段
+// 失去焦点/切换自动保存持久化字段
+document.getElementById('userName').addEventListener('blur', saveSmsPersist);
+document.getElementById('unit').addEventListener('blur', saveSmsPersist);
 document.getElementById('hours').addEventListener('blur', saveSmsPersist);
 document.getElementById('review').addEventListener('blur', saveSmsPersist);
 document.getElementById('level').addEventListener('change', saveSmsPersist);
@@ -759,9 +778,9 @@ function importData(event) {
 
 // ==========飞行短信生成逻辑==========
 function toggleCustomTitle() {
-    const select = document.getElementById('title');
+    const select = document.getElementById('title').value;
     const customTitle = document.getElementById('customTitle');
-    if (select.value === '其他') {
+    if (select === '其他') {
         customTitle.style.display = 'block';
     } else {
         customTitle.style.display = 'none';
@@ -772,6 +791,8 @@ function generate() {
     const titleSelect = document.getElementById('title').value;
     const customTitle = document.getElementById('customTitle').value;
     const title = titleSelect === '其他' ? customTitle : titleSelect;
+    const userName = document.getElementById('userName').value;
+    const unit = document.getElementById('unit').value;
     const level = document.getElementById('level').value;
     const hours = document.getElementById('hours').value;
     const totalControl = document.getElementById('totalControl').value;
@@ -790,7 +811,7 @@ function generate() {
     const riskText = risk ? `风险提示单主要内容：${risk}\n` : '';
     const reviewText = review ? `近期讲评的主要问题：${review}\n` : '';
     const eventText = event || '无';
-    const text = `${title}您好，我是二大队四中队${level}类副驾驶王翊文，很荣幸跟您飞行！
+    const text = `尊敬的${title}您好，我是${unit}${level}类副驾驶${userName}，很荣幸跟您飞行！
 飞行经历小时：${hours}小时
 总把杆次数：${totalControl}次
 近一个月把杆次数：${monthControl}次
