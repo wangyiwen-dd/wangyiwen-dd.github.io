@@ -1,369 +1,1088 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>副驾驶飞行前汇报短信模板</title>
-<!-- ✈️ Emoji SVG 图标，无需图片文件 -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Ctext x='0' y='400' font-size='400'%3E✈️%3C/text%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Ctext x='0' y='400' font-size='400'%3E✈️%3C/text%3E%3C/svg%3E">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>副驾驶飞行前汇报短信模板</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-<link rel="manifest" href="manifest.json">
-<script>
-// 阻止浏览器自动弹出【安装应用】弹窗
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  console.log('已拦截PWA安装弹窗');
-});
-// 注册ServiceWorker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js')
-    .then(reg => console.log('ServiceWorker注册成功', reg))
-    .catch(err => console.error('ServiceWorker注册失败', err));
-}
-</script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif}
-body{padding:14px;background:#f5f7fa;color:#222;font-size:15px;line-height:1.6}
-h1{font-size:20px;margin-bottom:6px;color:#1a3b70}
-/* 离线提示样式 */
-.offline-bar{
-  display:none;
-  background:#e67e22;
-  color:#fff;
-  text-align:center;
-  padding:8px;
-  border-radius:8px;
-  margin-bottom:12px;
-  font-weight:500;
-}
-.offline-bar.show{
-  display:block;
-}
-.tip-main{background:#fff2cc;border:1px solid #ffd470;padding:10px;border-radius:8px;margin-bottom:14px;color:#905900}
-.tip-text{margin-bottom:10px;color:#444;font-size:14px}
-.nowrap-text{white-space:nowrap;display:inline}
-.tab-wrap{display:flex;gap:6px;margin-bottom:14px}
-.tab-btn{flex:1;padding:10px;border:none;border-radius:8px;background:#e8edf6;color:#2c5aa0;font-size:15px}
-.tab-btn.active{background:#2c5aa0;color:#fff}
-.panel{display:none;background:#fff;padding:14px;border-radius:10px;box-shadow:0 1px 4px #00000014}
-.panel.active{display:block}
-.form-item{margin-bottom:12px}
-label{display:block;margin-bottom:4px;font-weight:500}
-input,select,textarea{width:100%;padding:9px 10px;border:1px solid #ccd5e3;border-radius:7px;font-size:15px;background:#fff}
-textarea{min-height:80px;resize:vertical;max-height:220px}
-.btn{padding:10px 14px;border:none;border-radius:8px;background:#2c5aa0;color:#fff;font-size:15px;margin:4px 2px}
-.btn-danger{background:#d64045}
-.btn-group{margin:12px 0;display:flex;flex-wrap:wrap;gap:6px}
-.record-item{display:flex;align-items:center;justify-content:space-between;padding:9px;border:1px solid #e2e8f0;border-radius:7px;margin:6px 0}
-.del-btn{padding:6px 9px;background:#d64045;color:#fff;border:none;border-radius:6px;font-size:14px}
-.stat-card{display:flex;gap:10px;margin-bottom:12px}
-.stat-item{flex:1;text-align:center;padding:10px;background:#e8edf6;border-radius:8px}
-.sync-area{margin-top:16px;padding-top:12px;border-top:1px dashed #ccc}
-.result-box{background:#f1f5fb;padding:12px;border-radius:8px;white-space:pre-wrap;margin:10px 0}
-</style>
+        :root {
+            --blue-deep: #153450;
+            --blue-main: #255073;
+            --blue-light: #eef4f9;
+            --blue-line: #d7e4ef;
+            --text-title: #153450;
+            --text-main: #222;
+            --text-sub: #5b6c7a;
+            --text-placeholder: #95a6b4;
+            --danger: #e04545;
+            --bg-page: #f4f7fa;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(21, 52, 80, 0.12);
+            --shadow-btn: 0 6px 18px rgba(37, 80, 115, 0.25);
+            --radius: 14px;
+            --radius-sm: 10px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--bg-page);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 16px;
+            overflow-x: hidden;
+        }
+
+        .nowrap-bracket {
+            white-space: nowrap;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 28px 22px 24px;
+            box-shadow: var(--shadow);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text-title);
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .main-desc {
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        .main-warn-text {
+            text-align: center;
+            font-size: 13px;
+            color: var(--danger);
+            line-height: 1.7;
+            margin-bottom: 22px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--blue-line);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            background: var(--blue-light);
+            padding: 6px;
+            border-radius: 12px;
+        }
+
+        .tab-item {
+            flex: 1;
+            padding: 12px 10px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--text-sub);
+            font-weight: 600;
+            min-height: 44px;
+            transition: all 0.2s ease;
+        }
+
+        .tab-item.active {
+            background: var(--blue-main);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(37, 80, 115, 0.35);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .tab-desc {
+            font-size: 13px;
+            color: var(--text-sub);
+            line-height: 1.7;
+            margin-bottom: 10px;
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue-main);
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+        }
+        .tab-cache-tip {
+            font-size: 13px;
+            color: var(--text-sub);
+            line-height: 1.7;
+            margin: 0 0 20px;
+            background: #f6f9fc;
+            border-left: 4px solid #86a2b8;
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: linear-gradient(160deg, #eef6fc, #dbeaf6);
+            border: 1px solid var(--blue-line);
+            border-radius: var(--radius);
+            padding: 18px 14px;
+            text-align: center;
+        }
+
+        .stat-card .label {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .stat-card .value {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--blue-deep);
+            letter-spacing: 1px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-title);
+            margin: 22px 0 14px;
+            padding-left: 12px;
+            border-left: 4px solid var(--blue-main);
+            line-height: 1.4;
+        }
+
+        .section-title:first-of-type {
+            margin-top: 4px;
+        }
+
+        .form-card {
+            background: #fafcfe;
+            border: 1px solid var(--blue-line);
+            border-radius: var(--radius);
+            padding: 18px;
+            margin-bottom: 6px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 14px;
+            width: 100%;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            color: var(--text-title);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .star {
+            color: var(--danger);
+            font-weight: 800;
+            margin-right: 4px;
+        }
+
+        .input-wrap {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="date"],
+        .form-group input[type="time"],
+        .form-group select {
+            flex: 1;
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--blue-line);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            color: var(--text-main);
+            background: #fff;
+            outline: none;
+            transition: all 0.2s ease;
+            min-height: 48px;
+        }
+        /* 自动高度文本框样式 */
+        .form-group textarea.auto-height {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--blue-line);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            color: var(--text-main);
+            background: #fff;
+            outline: none;
+            transition: all 0.2s ease;
+            min-height: 48px;
+            max-height: 160px;
+            resize: none;
+            line-height: 1.5;
+        }
+        .form-group textarea.auto-height:focus {
+            border-color: var(--blue-main);
+            box-shadow: 0 0 0 3px rgba(37, 80, 115, 0.12);
+        }
+        .form-group textarea.auto-height::placeholder {
+            color: var(--text-placeholder);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--blue-main);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(37, 80, 115, 0.12);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-placeholder);
+        }
+
+        .suffix,
+        .prefix {
+            font-size: 14px;
+            color: var(--text-sub);
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        #title,
+        #level,
+        #askDress {
+            flex: 0 0 110px;
+            width: 110px;
+        }
+        #aircraftType {
+            flex: 1 1 auto;
+            min-width: 160px;
+        }
+
+        #customTitle {
+            display: none;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 18px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 700;
+            min-height: 48px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--blue-main), #1a4266);
+            color: #fff;
+            flex: 1;
+            box-shadow: var(--shadow-btn);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1f4566, #14324f);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary,
+        .btn-copy {
+            background: #eaf2f9;
+            color: var(--blue-deep);
+            border: 1px solid var(--blue-line);
+        }
+
+        .btn-secondary:hover,
+        .btn-copy:hover {
+            background: #dce9f4;
+        }
+
+        .btn-danger {
+            background: #fdecec;
+            color: var(--danger);
+            border: 1px solid #f5c6c6;
+        }
+
+        .btn-danger:hover {
+            background: #fadfdf;
+        }
+
+        .data-section {
+            margin-top: 26px;
+        }
+
+        .data-section h2 {
+            font-size: 16px;
+            color: var(--text-title);
+            margin-bottom: 12px;
+            padding-left: 12px;
+            border-left: 4px solid var(--blue-main);
+        }
+
+        .record-list {
+            background: #fafcfe;
+            border: 1px solid var(--blue-line);
+            border-radius: var(--radius);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .record-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            border-bottom: 1px solid #eaf1f7;
+            font-size: 14px;
+            min-height: 52px;
+            gap: 12px;
+        }
+
+        .record-item:last-child {
+            border-bottom: none;
+        }
+
+        .record-item .date {
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
+        .record-item .count {
+            color: var(--blue-deep);
+            font-weight: 800;
+            margin-right: auto;
+        }
+
+        .del-btn {
+            background-color: #f45b5b;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            min-height: 36px;
+            transition: background 0.2s ease;
+            font-weight: 700;
+        }
+
+        .del-btn:hover {
+            background-color: #e04545;
+        }
+
+        .empty-tip {
+            text-align: center;
+            color: var(--text-placeholder);
+            padding: 24px;
+            font-size: 14px;
+        }
+
+        .sync-section {
+            margin-top: 26px;
+            padding-top: 20px;
+            border-top: 1px solid var(--blue-line);
+        }
+
+        .sync-section h2 {
+            font-size: 16px;
+            color: var(--text-title);
+            margin-bottom: 12px;
+            padding-left: 12px;
+            border-left: 4px solid var(--blue-main);
+        }
+
+        .sync-tip {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 14px;
+            line-height: 1.7;
+        }
+
+        .sync-btns {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .file-wrap {
+            position: relative;
+        }
+
+        .real-file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        .result-area {
+            margin-top: 24px;
+            background: linear-gradient(160deg, #fafcfe, #eef5fa);
+            border: 1px solid var(--blue-line);
+            border-radius: var(--radius);
+            padding: 18px;
+            display: none;
+        }
+
+        .result-area textarea {
+            width: 100%;
+            min-height: 320px;
+            border: none;
+            background: transparent;
+            font-size: 15px;
+            line-height: 1.9;
+            resize: vertical;
+            outline: none;
+            color: var(--text-main);
+            font-family: inherit;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                padding: 22px 16px 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .stats-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .form-card {
+                padding: 14px;
+            }
+
+            #title,
+            #level,
+            #askDress {
+                flex: 0 0 100px;
+                width: 100px;
+            }
+            #aircraftType {
+                min-width: 140px;
+            }
+        }
+    </style>
 </head>
 <body>
-<!-- 离线提示条 -->
-<div id="offlineTip" class="offline-bar">当前离线模式</div>
+<div class="container">
+    <h1>✈️ 副驾驶飞行前汇报短信模板</h1>
+    <div class="main-desc">本工具可以辅助生成飞行前短信，数据仅在本地保存。</div>
+    <div class="main-warn-text">⚠️ 注意：起落记录只保存在浏览器本地，使用该工具时请关闭无痕模式，若在其他设备上使用该工具，可使用<span class="nowrap-bracket">【起落数据统计】</span>页面下方数据同步功能，建议定期导出数据并备份。</div>
 
-<h1>副驾驶飞行前汇报短信模板</h1>
-<div class="tip-main">
-  <div class="tip-text">本工具可以辅助生成飞行前短信，数据仅在本地保存，离线可用。</div>
-  <div class="tip-text">⚠️ <span class="nowrap-text">起落记录只保存在浏览器本地，使用该工具时请关闭无痕模式，若在其他设备上使用该工具，可使用【起落数据统计】页面下方数据同步功能。</span></div>
-  <div class="tip-text">注：输入的<span class="nowrap-text">【所属单位】【类别】【姓名】【飞行经历小时】【近期讲评主要问题】及【半年内三级事件】</span>内容会保存在本地缓存中，工具打开时会保留上次填写的以上内容。</div>
-</div>
-
-<div class="tab-wrap">
-  <button class="tab-btn active" data-tab="stat">起落数据统计</button>
-  <button class="tab-btn" data-tab="sms">飞行前短信生成</button>
-</div>
-
-<!-- 起落统计面板 默认打开 -->
-<div class="panel active" id="stat">
-  <div class="tip-text">该工具可以统计<span class="nowrap-text">【起落总数】</span>及<span class="nowrap-text">【近一个月起落总数】</span>，并自动同步到<span class="nowrap-text">【飞行前短信生成】</span>工具中。只需将一个月前的起落总数合并添加，并依次添加一个月之内的起落，则可自动统计<span class="nowrap-text">【起落总数】</span>和<span class="nowrap-text">【近一个月起落】</span>。</div>
-  <div class="stat-card">
-    <div class="stat-item">总把杆：<span id="totalLanding">0</span></div>
-    <div class="stat-item">近一月把杆：<span id="monthLanding">0</span></div>
-  </div>
-  <div class="form-item">
-    <label>添加一条起落记录</label>
-    <input type="date" id="recDate">
-  </div>
-  <div class="btn-group">
-    <button class="btn" onclick="addRecord()">添加记录</button>
-    <button class="btn btn-danger" onclick="clearAllRecord()">清空全部记录</button>
-  </div>
-  <div id="recordList"></div>
-  <div class="sync-area">
-    <div class="tip-text">数据同步：可导出填写的起落记录，在其他设备上导入后即可使用。</div>
-    <div class="btn-group">
-      <button class="btn" onclick="exportJson()">导出JSON</button>
-      <button class="btn" onclick="document.getElementById('fileImport').click()">导入JSON</button>
-      <input type="file" id="fileImport" accept=".json" style="opacity:0;position:absolute;width:1px;height:1px" onchange="importJson(this)">
+    <div class="tabs">
+        <button class="tab-item active" data-tab="tab-qiluo">起落数据统计</button>
+        <button class="tab-item" data-tab="tab-sms">飞行前短信生成</button>
     </div>
-  </div>
-</div>
 
-<!-- 短信面板 -->
-<div class="panel" id="sms">
-  <div class="tip-text">该工具用于生成飞行前汇报短信，生成后的内容可一键复制。其中带*号内容为必填项目，<span class="nowrap-text">【总把杆次数】</span>和<span class="nowrap-text">【近一个月把杆次数】</span>自动从起落数据统计中获取，也可人工修改。其余内容不填则不显示在短信中。</div>
-  <div class="form-item">
-    <label>*称呼</label>
-    <select id="smsCall">
-      <option value="教员">教员</option>
-      <option value="机长">机长</option>
-      <option value="师兄">师兄</option>
-      <option value="其他">其他</option>
-    </select>
-  </div>
-  <div class="form-item">
-    <label>*所属单位</label>
-    <input type="text" id="smsUnit">
-  </div>
-  <div class="form-item">
-    <label>*技术等级</label>
-    <input type="text" id="smsLevel">
-  </div>
-  <div class="form-item">
-    <label>*姓名</label>
-    <input type="text" id="smsName" placeholder="请输入姓名">
-  </div>
-  <div class="form-item">
-    <label>机型</label>
-    <select id="smsPlane">
-      <option value="">请选择机型</option>
-      <option>A319-133</option>
-      <option>A320-214</option>
-      <option>A320-232</option>
-      <option>A320-271N</option>
-      <option>A321-211</option>
-      <option>A321-231</option>
-      <option>A321-271N</option>
-      <option>A321-271NX</option>
-      <option>A330-243</option>
-      <option>A330-343</option>
-      <option>A350-941</option>
-    </select>
-  </div>
-  <div class="form-item">
-    <label>机号</label>
-    <input type="text" id="smsPlaneNo" placeholder="请输入机号">
-  </div>
-  <div class="form-item">
-    <label>起飞时间</label>
-    <input type="time" id="smsTakeoff">
-  </div>
-  <div class="form-item">
-    <label>预计到达准备室时间</label>
-    <input type="time" id="smsReady">
-  </div>
-  <div class="form-item">
-    <label>*总把杆次数</label>
-    <input type="number" id="smsTotal">
-  </div>
-  <div class="form-item">
-    <label>*近一个月把杆次数</label>
-    <input type="number" id="smsMonth">
-  </div>
-  <div class="form-item">
-    <label>飞行经历小时</label>
-    <textarea id="smsHour"></textarea>
-  </div>
-  <div class="form-item">
-    <label>航行通告</label>
-    <textarea id="smsNotam"></textarea>
-  </div>
-  <div class="form-item">
-    <label>风险提示单主要内容</label>
-    <textarea id="smsRisk"></textarea>
-  </div>
-  <div class="form-item">
-    <label>近期讲评主要问题</label>
-    <textarea id="smsReview"></textarea>
-  </div>
-  <div class="form-item">
-    <label>半年内三级事件</label>
-    <textarea id="smsEvent"></textarea>
-  </div>
-  <div class="btn-group">
-    <button class="btn" onclick="buildSms()">生成汇报短信</button>
-    <button class="btn" onclick="copySms()">一键复制内容</button>
-  </div>
-  <div>预览：</div>
-  <div class="result-box" id="smsResult"></div>
+    <!-- 起落数据统计 默认激活 -->
+    <div class="tab-panel active" id="tab-qiluo">
+        <div class="tab-desc">该工具可以统计<span class="nowrap-bracket">【起落总数】</span>及<span class="nowrap-bracket">【近一个月起落总数】</span>，并自动同步到<span class="nowrap-bracket">【飞行前短信生成】</span>工具中。只需将一个月前的起落总数合并添加，并依次添加一个月之内的起落，则可自动统计<span class="nowrap-bracket">【起落总数】</span>和<span class="nowrap-bracket">【近一个月起落】</span>。</div>
+
+        <div class="stats-overview">
+            <div class="stat-card">
+                <div class="label">起落总数</div>
+                <div class="value" id="totalCount">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">近一个月起落</div>
+                <div class="value" id="monthCount">0</div>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="form-group">
+                <label>日期</label>
+                <div class="input-wrap">
+                    <input type="date" id="recordDate">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>起落次数</label>
+                <div class="input-wrap">
+                    <input type="number" id="recordCount" placeholder="请输入起落次数" min="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="addRecord()">添加记录</button>
+        </div>
+
+        <div class="data-section">
+            <h2>📋 记录列表</h2>
+            <div class="record-list" id="recordList">
+                <div class="empty-tip">暂无记录</div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-danger" onclick="clearAll()">清空所有记录</button>
+            </div>
+        </div>
+
+        <div class="sync-section">
+            <h2>🔄 数据同步</h2>
+            <p class="sync-tip">可导出填写的起落记录，在其他设备上导入后即可使用。</p>
+            <div class="sync-btns">
+                <button class="btn btn-secondary" onclick="exportData()">📤 导出数据</button>
+                <div class="file-wrap">
+                    <label class="btn btn-secondary" for="importFile">📥 导入数据</label>
+                    <input type="file" id="importFile" class="real-file-input" accept=".json" onchange="importData(event)">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 飞行前短信生成 -->
+    <div class="tab-panel" id="tab-sms">
+        <div class="tab-desc">该工具用于生成飞行前汇报短信，生成后的内容可一键复制。其中带*号内容为必填项目，<span class="nowrap-bracket">【总把杆次数】</span>和<span class="nowrap-bracket">【近一个月把杆次数】</span>自动从<span class="nowrap-bracket">【起落数据统计】</span>中获取，也可人工修改。其余内容不填则不显示在短信中。</div>
+        <div class="tab-cache-tip">注：输入的<span class="nowrap-bracket">【所属单位】</span><span class="nowrap-bracket">【技术等级】</span><span class="nowrap-bracket">【姓名】</span><span class="nowrap-bracket">【飞行经历小时】</span><span class="nowrap-bracket">【近期讲评主要问题】</span>及<span class="nowrap-bracket">【半年内三级事件】</span>内容会保存在本地缓存中，工具打开时会保留上次填写的以上内容。</div>
+
+        <div class="section-title">基本信息</div>
+        <div class="form-card">
+            <div class="form-group">
+                <label><span class="star">*</span>称呼</label>
+                <div class="input-wrap">
+                    <select id="title" onchange="toggleCustomTitle()">
+                        <option value="教员">教员</option>
+                        <option value="机长">机长</option>
+                        <option value="师兄">师兄</option>
+                        <option value="其他">其他</option>
+                    </select>
+                    <input type="text" id="customTitle" placeholder="请输入称呼">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><span class="star">*</span>所属单位</label>
+                <div class="input-wrap">
+                    <input type="text" id="unit" placeholder="例如：二大队四中队">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><span class="star">*</span>技术等级</label>
+                <div class="input-wrap">
+                    <select id="level">
+                        <option value="FL">FL</option>
+                        <option value="FA">FA</option>
+                        <option value="FA*">FA*</option>
+                        <option value="FB">FB</option>
+                        <option value="FB*">FB*</option>
+                        <option value="FC">FC</option>
+                        <option value="FD">FD</option>
+                        <option value="FE">FE</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><span class="star">*</span>姓名</label>
+                <div class="input-wrap">
+                    <input type="text" id="userName" placeholder="请输入姓名">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><span class="star">*</span>飞行经历小时</label>
+                <div class="input-wrap">
+                    <input type="number" id="hours" placeholder="请输入小时数" min="0">
+                    <span class="suffix">小时</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><span class="star">*</span>总把杆次数</label>
+                <div class="input-wrap">
+                    <input type="number" id="totalControl" placeholder="自动读取起落统计" min="0">
+                    <span class="suffix">次</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><span class="star">*</span>近一个月把杆次数</label>
+                <div class="input-wrap">
+                    <input type="number" id="monthControl" placeholder="自动读取起落统计" min="0">
+                    <span class="suffix">次</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><span class="star">*</span>明天的飞行计划</label>
+                <div class="input-wrap">
+                    <input type="text" id="plan" placeholder="例如：蓉-京-蓉">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><span class="star">*</span>航班号</label>
+                <div class="input-wrap">
+                    <span class="prefix">3U</span>
+                    <input type="text" id="flightNo" placeholder="例如：8883/8884">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><span class="star">*</span>起飞时间</label>
+                <div class="input-wrap">
+                    <input type="time" id="depTime">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><span class="star">*</span>预计到准备室时间</label>
+                <div class="input-wrap">
+                    <input type="time" id="readyTime">
+                </div>
+            </div>
+
+            <!-- 机型在前 -->
+            <div class="form-group">
+                <label><span class="star">*</span>机型</label>
+                <div class="input-wrap">
+                    <select id="aircraftType">
+                        <option value="A319-133">A319-133</option>
+                        <option value="A320-214">A320-214</option>
+                        <option value="A320-232">A320-232</option>
+                        <option value="A320-271N">A320-271N</option>
+                        <option value="A321-211">A321-211</option>
+                        <option value="A321-231">A321-231</option>
+                        <option value="A321-271N">A321-271N</option>
+                        <option value="A321-271NX">A321-271NX</option>
+                        <option value="A330-243">A330-243</option>
+                        <option value="A330-343">A330-343</option>
+                        <option value="A350-941">A350-941</option>
+                    </select>
+                </div>
+            </div>
+            <!-- 机号在后 -->
+            <div class="form-group">
+                <label><span class="star">*</span>机号</label>
+                <div class="input-wrap">
+                    <span class="prefix">B‑</span>
+                    <input type="text" id="aircraftNo" placeholder="请输入机号">
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">通告与风险</div>
+        <div class="form-card">
+            <div class="form-group">
+                <label>航行通告</label>
+                <textarea class="auto-height" id="notam" placeholder="请输入航行通告内容"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>风险提示单主要内容</label>
+                <textarea class="auto-height" id="risk" placeholder="请输入风险提示内容"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>近期讲评的主要问题</label>
+                <textarea class="auto-height" id="review" placeholder="请输入讲评问题"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>半年内三级事件</label>
+                <textarea class="auto-height" id="event" placeholder="请输入半年内三级事件"></textarea>
+            </div>
+        </div>
+
+        <div class="section-title">着装确认</div>
+        <div class="form-card">
+            <div class="form-group">
+                <label><span class="star">*</span>是否询问着装要求</label>
+                <div class="input-wrap">
+                    <select id="askDress">
+                        <option value="yes">是</option>
+                        <option value="no">否</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group" style="justify-content:center">
+            <button class="btn btn-primary" onclick="generate()">生成短信</button>
+            <button class="btn btn-copy" onclick="copyText()" id="copyBtn" style="display:none;">一键复制内容</button>
+        </div>
+
+        <div class="result-area" id="resultArea">
+            <textarea id="resultText" readonly></textarea>
+        </div>
+    </div>
 </div>
 
 <script>
-// 离线状态检测
-const offlineTipEl = document.getElementById('offlineTip');
-function updateOfflineTip(){
-  if(!navigator.onLine){
-    offlineTipEl.classList.add('show');
-  }else{
-    offlineTipEl.classList.remove('show');
-  }
+const STORAGE_KEY = 'qiluo_records';
+const SMS_SAVE_KEY = 'sms_persist_data';
+
+// 自动高度函数
+function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
 }
-window.addEventListener('online', updateOfflineTip);
-window.addEventListener('offline', updateOfflineTip);
-updateOfflineTip();
 
-// 全局存储key
-const KEY_RECORD = "flight_record_list";
-const KEY_SMS_DATA = "flight_sms_form";
+function bindAutoResize() {
+    document.querySelectorAll('textarea.auto-height').forEach(ta=>{
+        autoResize(ta);
+        ta.addEventListener('input', ()=>autoResize(ta));
+    })
+}
 
-// 标签切换
-const tabs = document.querySelectorAll('.tab-btn');
-tabs.forEach(btn=>{
-  btn.onclick = ()=>{
-    tabs.forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const t = btn.dataset.tab;
-    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-    document.getElementById(t).classList.add('active');
-    if(t === 'sms') syncStatToSms();
-  }
+function getSmsPersist(){
+    const raw = localStorage.getItem(SMS_SAVE_KEY);
+    return raw ? JSON.parse(raw) : { userName:"", unit:"", hours:"", review:"", level:"", event:"", askDress:"yes", notam:"", risk:"" };
+}
+
+function saveSmsPersist(){
+    const obj = {
+        userName: document.getElementById('userName').value,
+        unit: document.getElementById('unit').value,
+        hours: document.getElementById('hours').value,
+        review: document.getElementById('review').value,
+        level: document.getElementById('level').value,
+        event: document.getElementById('event').value,
+        askDress: document.getElementById('askDress').value,
+        notam: document.getElementById('notam').value,
+        risk: document.getElementById('risk').value
+    };
+    localStorage.setItem(SMS_SAVE_KEY, JSON.stringify(obj));
+}
+
+function fillSmsPersist(){
+    const d = getSmsPersist();
+    document.getElementById('userName').value = d.userName;
+    document.getElementById('unit').value = d.unit;
+    document.getElementById('hours').value = d.hours;
+    document.getElementById('review').value = d.review || '';
+    if(d.level) document.getElementById('level').value = d.level;
+    if(d.event !== undefined) document.getElementById('event').value = d.event || '';
+    if(d.askDress) document.getElementById('askDress').value = d.askDress;
+    document.getElementById('notam').value = d.notam || '';
+    document.getElementById('risk').value = d.risk || '';
+    // 回填后重新计算高度
+    bindAutoResize();
+}
+
+function fillControlData(){
+    const records = getRecords();
+    const total = records.reduce((sum, r) => sum + r.count, 0);
+    const monthAgo = getMonthAgo();
+    const monthTotal = records.filter(r => new Date(r.date) >= monthAgo).reduce((sum, r)=> sum + r.count,0);
+
+    document.getElementById('totalControl').value = total;
+    document.getElementById('monthControl').value = monthTotal;
+}
+
+const tabBtns = document.querySelectorAll('.tab-item');
+tabBtns.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        const tabId = btn.dataset.tab;
+        tabBtns.forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+
+        if(tabId === 'tab-sms'){
+            fillControlData();
+            fillSmsPersist();
+        }
+    })
 })
 
-// 起落记录相关
-let recordList = JSON.parse(localStorage.getItem(KEY_RECORD)) || [];
-function saveRecord(){localStorage.setItem(KEY_RECORD,JSON.stringify(recordList))}
-function getMonthStart(){
-  const d = new Date();
-  d.setMonth(d.getMonth()-1);
-  return d;
-}
-function calcStat(){
-  const monthStart = getMonthStart();
-  let total = recordList.length;
-  let month = recordList.filter(item=>new Date(item.date) >= monthStart).length;
-  document.getElementById('totalLanding').innerText = total;
-  document.getElementById('monthLanding').innerText = month;
-  return {total,month};
-}
-function renderRecord(){
-  const wrap = document.getElementById('recordList');
-  wrap.innerHTML = '';
-  recordList.forEach((r,idx)=>{
-    const div = document.createElement('div');
-    div.className='record-item';
-    div.innerHTML = `<span>${r.date}</span><button class="del-btn" onclick="delRecord(${idx})">删除</button>`;
-    wrap.appendChild(div);
-  })
-  calcStat();
-}
-function addRecord(){
-  const d = document.getElementById('recDate').value;
-  if(!d)return alert("请选择日期");
-  recordList.push({date:d});
-  saveRecord();renderRecord();
-}
-function delRecord(i){recordList.splice(i,1);saveRecord();renderRecord()}
-function clearAllRecord(){
-  if(!confirm("确定清空所有起落记录？"))return;
-  recordList=[];saveRecord();renderRecord();
-}
-function exportJson(){
-  const blob = new Blob([JSON.stringify(recordList,null,2)],{type:"application/json"});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = "起落记录.json";
-  a.click();
-}
-function importJson(input){
-  const f = input.files[0];
-  if(!f)return;
-  const r = new FileReader();
-  r.onload = e=>{
-    try{
-      const arr = JSON.parse(e.target.result);
-      if(!Array.isArray(arr))throw Error();
-      recordList = arr;
-      saveRecord();renderRecord();alert("导入成功");
-    }catch{alert("JSON文件格式错误")}
-  }
-  r.readAsText(f);
-  input.value = '';
+// 监听保存
+document.getElementById('userName').addEventListener('blur', saveSmsPersist);
+document.getElementById('unit').addEventListener('blur', saveSmsPersist);
+document.getElementById('hours').addEventListener('blur', saveSmsPersist);
+document.getElementById('review').addEventListener('input', saveSmsPersist);
+document.getElementById('level').addEventListener('change', saveSmsPersist);
+document.getElementById('event').addEventListener('input', saveSmsPersist);
+document.getElementById('askDress').addEventListener('change', saveSmsPersist);
+document.getElementById('notam').addEventListener('input', saveSmsPersist);
+document.getElementById('risk').addEventListener('input', saveSmsPersist);
+
+function getRecords() {
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
 }
 
-// 同步统计数据到短信面板
-function syncStatToSms(){
-  const s = calcStat();
-  document.getElementById('smsTotal').value = s.total;
-  document.getElementById('smsMonth').value = s.month;
+function saveRecords(records) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
 }
 
-// 短信表单本地保存
-let smsForm = JSON.parse(localStorage.getItem(KEY_SMS_DATA)) || {};
-const smsFields = ['smsUnit','smsLevel','smsName','smsHour','smsReview','smsEvent'];
-function loadSmsForm(){
-  for(const k of smsFields){
-    const el = document.getElementById(k);
-    if(el && smsForm[k]!==undefined) el.value = smsForm[k];
-  }
-}
-function saveSmsForm(){
-  for(const k of smsFields){
-    const el = document.getElementById(k);
-    if(el)smsForm[k]=el.value;
-  }
-  localStorage.setItem(KEY_SMS_DATA,JSON.stringify(smsForm));
-}
-// 输入自动保存
-smsFields.forEach(id=>{
-  const el = document.getElementById(id);
-  if(el) el.oninput = saveSmsForm;
-})
-
-// 生成短信
-let smsText = '';
-function buildSms(){
-  const call = document.getElementById('smsCall').value;
-  const unit = document.getElementById('smsUnit').value.trim();
-  const level = document.getElementById('smsLevel').value.trim();
-  const name = document.getElementById('smsName').value.trim();
-  const plane = document.getElementById('smsPlane').value.trim();
-  const planeNo = document.getElementById('smsPlaneNo').value.trim();
-  const takeoff = document.getElementById('smsTakeoff').value.trim();
-  const ready = document.getElementById('smsReady').value.trim();
-  const total = document.getElementById('smsTotal').value.trim();
-  const mon = document.getElementById('smsMonth').value.trim();
-  const hour = document.getElementById('smsHour').value.trim();
-  const notam = document.getElementById('smsNotam').value.trim();
-  const risk = document.getElementById('smsRisk').value.trim();
-  const review = document.getElementById('smsReview').value.trim();
-  const event = document.getElementById('smsEvent').value.trim();
-
-  if(!call || !unit || !level || !name || !total || !mon){
-    return alert("带*号项目必须填写");
-  }
-  let t = `尊敬的${call}：
-所属单位：${unit}
-技术等级：${level}
-姓名：${name}`;
-  if(plane) t += `\n机型：${plane}`;
-  if(planeNo) t += `\n机号：${planeNo}`;
-  if(takeoff) t += `\n起飞时间：${takeoff}`;
-  if(ready) t += `\n预计到达准备室时间：${ready}`;
-  t += `\n总把杆次数：${total}
-近一个月把杆次数：${mon}`;
-  if(hour) t += `\n飞行经历小时：${hour}`;
-  if(notam) t += `\n航行通告：${notam}`;
-  if(risk) t += `\n风险提示单主要内容：${risk}`;
-  if(review) t += `\n近期讲评主要问题：${review}`;
-  if(event) t += `\n半年内三级事件：${event}`;
-  smsText = t;
-  document.getElementById('smsResult').innerText = smsText;
-  saveSmsForm();
-}
-function copySms(){
-  if(!smsText) return alert("请先生成短信内容");
-  navigator.clipboard.writeText(smsText).then(()=>alert("复制成功"));
+function getMonthAgo() {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
 }
 
-// 初始化
-renderRecord();
-loadSmsForm();
+function updateStats() {
+    const records = getRecords();
+    const total = records.reduce((sum, r) => sum + r.count, 0);
+    document.getElementById('totalCount').textContent = total;
+
+    const monthAgo = getMonthAgo();
+    const monthTotal = records
+        .filter(r => new Date(r.date) >= monthAgo)
+        .reduce((sum, r) => sum + r.count, 0);
+
+    document.getElementById('monthCount').textContent = monthTotal;
+}
+
+function renderList() {
+    const records = getRecords();
+    const list = document.getElementById('recordList');
+
+    if (records.length === 0) {
+        list.innerHTML = '<div class="empty-tip">暂无记录</div>';
+        return;
+    }
+
+    const sorted = [...records].sort((a, b) => new Date(b.date) - new Date(a.date));
+    list.innerHTML = sorted.map(r => `
+        <div class="record-item">
+            <span class="date">${r.date}</span>
+            <span class="count">${r.count} 次</span>
+            <button class="del-btn" onclick="deleteRecord('${r.date}')">删除</button>
+        </div>
+    `).join('');
+}
+
+function addRecord() {
+    const date = document.getElementById('recordDate').value;
+    const count = parseInt(document.getElementById('recordCount').value);
+
+    if (!date) {
+        alert('请选择日期');
+        return;
+    }
+
+    if (isNaN(count) || count < 0) {
+        alert('请输入有效的起落次数');
+        return;
+    }
+
+    const records = getRecords();
+    const existing = records.find(r => r.date === date);
+
+    if (existing) {
+        existing.count += count;
+    } else {
+        records.push({ date, count });
+    }
+
+    saveRecords(records);
+    document.getElementById('recordCount').value = '';
+    updateStats();
+    renderList();
+}
+
+function deleteRecord(date) {
+    let records = getRecords();
+    records = records.filter(r => r.date !== date);
+    saveRecords(records);
+    updateStats();
+    renderList();
+}
+
+function clearAll() {
+    if (!confirm('确定要清空所有记录吗？此操作不可恢复！')) return;
+    saveRecords([]);
+    updateStats();
+    renderList();
+}
+
+function exportData() {
+    const records = getRecords();
+    const blob = new Blob([JSON.stringify(records, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `起落数据统计_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+    const reader = new FileReader();
+
+    reader.onerror = function(){
+        alert('读取文件失败，请检查文件');
+        event.target.value = '';
+    };
+
+    reader.onload = function(e) {
+        try {
+            let data = JSON.parse(e.target.result);
+
+            if(data && Array.isArray(data.records)){
+                data = data.records;
+            }
+
+            if(!Array.isArray(data)){
+                throw new Error('不是起落记录数组');
+            }
+
+            const valid = data.every(r => r.date && typeof r.count === 'number');
+            if (!valid) throw new Error('格式错误');
+
+            if (!confirm(`将导入 ${data.length} 条起落记录，是否覆盖当前记录？`)) {
+                event.target.value = '';
+                return;
+            }
+
+            saveRecords(data);
+            updateStats();
+            renderList();
+            alert('导入成功！起落记录已恢复');
+        } catch (err) {
+            alert('导入失败：文件格式不正确');
+        }
+
+        event.target.value = '';
+    };
+
+    reader.readAsText(file);
+}
+
+function toggleCustomTitle() {
+    const select = document.getElementById('title').value;
+    const customTitle = document.getElementById('customTitle');
+
+    if (select === '其他') {
+        customTitle.style.display = 'block';
+    } else {
+        customTitle.style.display = 'none';
+        customTitle.value = '';
+    }
+}
+
+function generate() {
+    const titleSelect = document.getElementById('title').value;
+    const customTitle = document.getElementById('customTitle').value;
+    const userName = document.getElementById('userName').value.trim();
+    const unit = document.getElementById('unit').value.trim();
+    const level = document.getElementById('level').value;
+    const hours = document.getElementById('hours').value.trim();
+    const totalControl = document.getElementById('totalControl').value.trim();
+    const monthControl = document.getElementById('monthControl').value.trim();
+    const plan = document.getElementById('plan').value.trim();
+    const flightNo = document.getElementById('flightNo').value.trim();
+    const depTime = document.getElementById('depTime').value;
+    const readyTime = document.getElementById('readyTime').value;
+    const aircraftType = document.getElementById('aircraftType').value;
+    const aircraftNo = document.getElementById('aircraftNo').value.trim();
+    const askDress = document.getElementById('askDress').value;
+
+    const title = titleSelect === '其他' ? customTitle.trim() : titleSelect;
+
+    if(!title){alert('请填写称呼');return;}
+    if(!userName){alert('请填写姓名');return;}
+    if(!unit){alert('请填写所属单位');return;}
+    if(!hours){alert('请填写飞行经历小时');return;}
+    if(!totalControl){alert('请填写总把杆次数');return;}
+    if(!monthControl){alert('请填写近一个月把杆次数');return;}
+    if(!plan){alert('请填写明天的飞行计划');return;}
+    if(!flightNo){alert('请填写航班号');return;}
+    if(!depTime){alert('请选择起飞时间');return;}
+    if(!readyTime){alert('请选择预计到准备室时间');return;}
+    if(!aircraftNo){alert('请填写机号');return;}
+
+    const notam = document.getElementById('notam').value.trim();
+    const risk = document.getElementById('risk').value.trim();
+    const review = document.getElementById('review').value.trim();
+    const event = document.getElementById('event').value.trim();
+
+    const notamText = notam ? `航行通告：${notam}\n` : '';
+    const riskText = risk ? `风险提示单主要内容：${risk}\n` : '';
+    const reviewText = review ? `近期讲评的主要问题：${review}\n` : '';
+    const eventText = event ? `半年内三级事件：${event}\n` : '';
+    const dressText = askDress === 'yes' ? `麻烦再问一下，您看明天我们着装是什么要求？` : '';
+
+    const text = `尊敬的${title}您好，我是${unit}${level}类副驾驶${userName}，很荣幸跟您飞行！
+飞行经历小时：${hours}小时
+总把杆次数：${totalControl}次
+近一个月把杆次数：${monthControl}次
+明天的飞行计划：${plan}
+航班号：3U${flightNo}
+起飞时间：${depTime}
+预计到准备室时间：${readyTime}
+机型/机号：${aircraftType}/B‑${aircraftNo}
+${notamText}${riskText}${reviewText}${eventText}已完成了网上准备，有很多需要学习的地方，请您多多指教！祝您飞行愉快！谢谢您！
+${dressText}`;
+
+    document.getElementById('resultText').value = text;
+    document.getElementById('resultArea').style.display = 'block';
+    document.getElementById('copyBtn').style.display = 'inline-block';
+}
+
+async function copyText() {
+    const text = document.getElementById('resultText').value;
+    const btn = document.getElementById('copyBtn');
+
+    try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = '✅ 已复制';
+    } catch (err) {
+        document.getElementById('resultText').select();
+        document.getElementById('resultText').setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        btn.textContent = '✅ 已复制';
+    }
+
+    setTimeout(() => { btn.textContent = '一键复制内容'; }, 2000);
+}
+
+updateStats();
+renderList();
+bindAutoResize();
 </script>
 </body>
 </html>
